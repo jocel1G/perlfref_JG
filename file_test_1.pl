@@ -72,10 +72,54 @@ sub showem
     {; @_} #ok
     #{ return @_ } #ok
 }
-my $for_use_showem = showem(%c);
-print Dumper($for_use_showem);exit();
+#my $for_use_showem = showem(%c);
+my $for_use_showem = showem((1 + 2), 42);
+#print Dumper($for_use_showem);
+print $for_use_showem . "\n";
 
-# Dereferencing
+# From page http://stackoverflow.com/questions/1617546/whats-the-history-of-the-in-front-of-a-hashref-that-disambiguates-from-a-code
+print (1 + 2), 42;
+print "\n";
+print +(1 + 2), 42; # Prints 3 and 42.
+print "\n";
+#exit();
+
+# 4 A reference to an anonymous subroutine can be created by using sub without a subname
+my $coderef_4 = sub
+{
+    print "Boink!\n";
+};
+
+# closures
+sub newprint
+{
+    my $x = shift;
+    return sub
+    {
+        my $y = shift;
+        print "$x, $y!\n";
+    };
+}
+#newprint ("Str1", "str2");
+my $h = newprint("Howdy");
+my $g = newprint("Greetings");
+
+# Time passes
+
+&$h("world");
+&$g("earthlings");
+
+# 5
+
+# 7 *foo{THING}
+my $scalarref_7 = *foo{SCALAR}; # returns \undef
+print Dumper($scalarref_7);
+# our seen at page http://stackoverflow.com/questions/6505654/how-do-i-do-the-same-thing-as-reference-using-typeglob-in-perl
+our $foo_7 = 4555;
+my $scalarref_7_2 = *foo_7{SCALAR}; # returns \4555
+print Dumper($scalarref_7_2);
+
+# *********************************Dereferencing*********************************
 # 1
 print "$$scalarref\n";
 print @$arrayref[0] . "\n";
@@ -97,3 +141,9 @@ print ${$list_of_ref_b[0]} . "\n";
 #print ${$list_of_ref_c}{"name"} . "\n";
 # Or
 print $list_of_ref_c->{"name"} . "\n";
+
+# 3
+&$coderef_4();
+
+# 7
+print "\$\$scalarref_7_2 = " . $$scalarref_7_2 . "\n";
